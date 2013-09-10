@@ -6,7 +6,7 @@
             "endFile": "almond/end.frag"
           },
           "name": "node_modules/almond/almond",
-          "include": ["main"],
+          "include": ["jszip/main"],
           //optimize:"uglify2",
           optimize:"none",
           "uglify2":{

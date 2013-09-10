@@ -2881,9 +2881,5 @@ JSZip.prototype.clone = function() {
 JSZip.prototype.load=require('jszip/load');
 return JSZip;
 });
-
-define('main',['jszip/main'],function(jszip){
-	return jszip;
-});
-  return require('main');
+  return require('jszip/main');
 }));
