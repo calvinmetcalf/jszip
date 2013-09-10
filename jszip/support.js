@@ -1,5 +1,6 @@
 define(function(require,exports) {
 	exports.base64=true;
+	exports.array=true;
 	exports.string=true;
 	exports.arraybuffer =  typeof ArrayBuffer !== "undefined" && typeof Uint8Array !== "undefined";
    // contains true if JSZip can read/generate nodejs Buffer, false otherwise.

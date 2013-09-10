@@ -1,2 +1,2 @@
-  return require('jszip/main');
+  return require('jszip');
 }));
