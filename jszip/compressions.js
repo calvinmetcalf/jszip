@@ -1,4 +1,4 @@
-define(['jszip/flate/main'],function(deflate){
+define(function(require){
 	return {
    "STORE" : {
       magic : "\x00\x00",
@@ -11,6 +11,6 @@ define(['jszip/flate/main'],function(deflate){
        compressInputType : null,
       uncompressInputType : null
    },
-   DEFLATE:deflate
+   DEFLATE:require('jszip/flate/main')
 };
 });

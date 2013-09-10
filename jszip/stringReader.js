@@ -1,5 +1,6 @@
-define(['jszip/dataReader','jszip/utils'],function(DataReader,utils){
-	
+define(function(require){
+	var DataReader = require('jszip/dataReader');
+	var utils = require('jszip/utils');
 	
 	function StringReader(data, optimizedBinaryString) {
       this.data = data;

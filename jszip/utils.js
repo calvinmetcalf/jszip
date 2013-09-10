@@ -1,11 +1,12 @@
-define(['jszip/support','jszip/compressions'], function(support,compressions) {
-	var utils = {};
+define(function(require,exports) {
+    var support = require('jszip/support');
+	var compressions = require('jszip/compressions');
 	/**
 	 * Convert a string to a "binary string" : a string containing only char codes between 0 and 255.
 	 * @param {string} str the string to transform.
 	 * @return {String} the binary string.
 	 */
-	utils.string2binary = function(str) {
+	exports.string2binary = function(str) {
 		var result = "";
 		for (var i = 0; i < str.length; i++) {
 			result += String.fromCharCode(str.charCodeAt(i) & 0xff);
@@ -18,8 +19,8 @@ define(['jszip/support','jszip/compressions'], function(support,compressions) {
 	 * @return {Uint8Array} the typed array.
 	 * @throws {Error} an Error if the browser doesn't support the requested feature.
 	 */
-	utils.string2Uint8Array =  function (str) {
-         return utils.transformTo("uint8array", str);
+	exports.string2Uint8Array =  function (str) {
+         return exports.transformTo("uint8array", str);
       };
 
 	/**
@@ -28,8 +29,8 @@ define(['jszip/support','jszip/compressions'], function(support,compressions) {
 	 * @return {string} the string.
 	 * @throws {Error} an Error if the browser doesn't support the requested feature.
 	 */
-	utils.uint8Array2String = function (array) {
-         return utils.transformTo("string", array);
+	exports.uint8Array2String = function (array) {
+         return exports.transformTo("string", array);
       };
 	/**
 	 * Create a blob from the given string.
@@ -37,12 +38,12 @@ define(['jszip/support','jszip/compressions'], function(support,compressions) {
 	 * @return {Blob} the string.
 	 * @throws {Error} an Error if the browser doesn't support the requested feature.
 	 */
-	utils.string2Blob = function (str) {
-         var buffer = utils.transformTo("arraybuffer", str);
-         return utils.arrayBuffer2Blob(buffer);
+	exports.string2Blob = function (str) {
+         var buffer = exports.transformTo("arraybuffer", str);
+         return exports.arrayBuffer2Blob(buffer);
       };
-	utils.arrayBuffer2Blog=function(buffer) {
-		utils.checkSupport("blob");
+	exports.arrayBuffer2Blob=function(buffer) {
+		exports.checkSupport("blob");
 
          try {
             // Blob constructor
@@ -104,7 +105,7 @@ define(['jszip/support','jszip/compressions'], function(support,compressions) {
       //
       // This code is inspired by http://jsperf.com/arraybuffer-to-string-apply-performance/2
       var chunk = 65536;
-      var result = [], len = array.length, type = utils.getTypeOf(array), k = 0;
+      var result = [], len = array.length, type = exports.getTypeOf(array), k = 0;
 
       while (k < len && chunk > 1) {
          try {
@@ -224,7 +225,7 @@ define(['jszip/support','jszip/compressions'], function(support,compressions) {
     * @param {String|Array|ArrayBuffer|Uint8Array|Buffer} input the input to convert.
     * @throws {Error} an Error if the browser doesn't support the requested output type.
     */
-   utils.transformTo = function (outputType, input) {
+   exports.transformTo = function (outputType, input) {
       if (!input) {
          // undefined, null, etc
          // an empty string won't harm.
@@ -233,8 +234,8 @@ define(['jszip/support','jszip/compressions'], function(support,compressions) {
       if (!outputType) {
          return input;
       }
-      utils.checkSupport(outputType);
-      var inputType = utils.getTypeOf(input);
+      exports.checkSupport(outputType);
+      var inputType = exports.getTypeOf(input);
       var result = transform[inputType][outputType](input);
       return result;
    };
@@ -245,7 +246,7 @@ define(['jszip/support','jszip/compressions'], function(support,compressions) {
     * @param {Object} input the input to identify.
     * @return {String} the (lowercase) type of the input.
     */
-   utils.getTypeOf = function (input) {
+   exports.getTypeOf = function (input) {
       if (typeof input === "string") {
          return "string";
       }
@@ -268,35 +269,21 @@ define(['jszip/support','jszip/compressions'], function(support,compressions) {
     * @param {String} type the type to check.
     * @throws {Error} an Error if the browser doesn't support the requested type.
     */
-   utils.checkSupport = function (type) {
-      var supported = true;
-      switch (type.toLowerCase()) {
-         case "uint8array":
-            supported = support.uint8array;
-         break;
-         case "arraybuffer":
-            supported = support.arraybuffer;
-         break;
-         case "nodebuffer":
-            supported = support.nodebuffer;
-         break;
-         case "blob":
-            supported = support.blob;
-         break;
-      }
+   exports.checkSupport = function (type) {
+      var supported = support[type.toLowerCase()];
       if (!supported) {
          throw new Error(type + " is not supported by this browser");
       }
    };
-	utils.MAX_VALUE_16BITS = 65535;
-   utils.MAX_VALUE_32BITS = -1; // well, "\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF" is parsed as -1
+	exports.MAX_VALUE_16BITS = 65535;
+   exports.MAX_VALUE_32BITS = -1; // well, "\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF" is parsed as -1
 
    /**
     * Prettify a string read as binary.
     * @param {string} str the string to prettify.
     * @return {string} a pretty string.
     */
-   utils.pretty = function (str) {
+   exports.pretty = function (str) {
       var res = '', code, i;
       for (i = 0; i < (str||"").length; i++) {
          code = str.charCodeAt(i);
@@ -310,7 +297,7 @@ define(['jszip/support','jszip/compressions'], function(support,compressions) {
     * @param {string} compressionMethod the method magic to find.
     * @return {Object|null} the JSZip compression object, null if none found.
     */
-   utils.findCompression = function (compressionMethod) {
+   exports.findCompression = function (compressionMethod) {
       for (var method in compressions) {
          if( !compressions.hasOwnProperty(method) ) { continue; }
          if (compressions[method].magic === compressionMethod) {
@@ -319,5 +306,4 @@ define(['jszip/support','jszip/compressions'], function(support,compressions) {
       }
       return null;
    };
-	return utils;
 });

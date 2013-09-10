@@ -1,9 +1,11 @@
-define(['jszip/base64','jszip/zipEntries'],function(JSZipBase64,ZipEntries){
+define(function(require){
+    var base64 = require('jszip/base64');
+    var ZipEntries = require('jszip/zipEntries');
 return function(data, options) {
       var files, zipEntries, i, input;
       options = options || {};
       if(options.base64) {
-         data = JSZipBase64.decode(data);
+         data = base64.decode(data);
       }
 
       zipEntries = new ZipEntries(data, options);

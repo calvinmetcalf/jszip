@@ -1,5 +1,5 @@
-define(['jszip/utils'],function(utils){
-
+define(function(require){
+    var utils = require('jszip/utils');
 function DataReader(data) {
       this.data = null; // type : see implementation
       this.length = 0;

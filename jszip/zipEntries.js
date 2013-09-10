@@ -1,4 +1,11 @@
-define(['jszip/stringReader','jszip/nodeBufferReader','jszip/uint8ArrayReader','jszip/utils','jszip/signature','jszip/zipEntry','jszip/support'],function(StringReader,NodeBufferReader,Uint8ArrayReader,utils,sig,ZipEntry,support){
+define(function(require){
+    var StringReader = require('jszip/stringReader');
+    var NodeBufferReader = require('jszip/nodeBufferReader');
+    var Uint8ArrayReader = require('jszip/uint8ArrayReader');
+    var utils = require('jszip/utils');
+    var sig = require('jszip/signature');
+    var ZipEntry = require('jszip/zipEntry');
+    var support = require('jszip/support');
   //  class ZipEntries {{{
    /**
     * All the entries in the zip file.

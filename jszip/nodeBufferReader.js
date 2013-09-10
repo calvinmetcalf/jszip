@@ -1,5 +1,5 @@
-define(['jszip/uint8ArrayReader'],function(Uint8ArrayReader){
-
+define(function(require){
+var Uint8ArrayReader = require('jszip/uint8ArrayReader');
 function NodeBufferReader(data) {
       this.data = data;
       this.length = this.data.length;

@@ -1,16 +1,11 @@
-define(function(require){
-var inflate = require('jszip/flate/inflate');
-var deflate = require('jszip/flate/deflate');
-var USE_TYPEDARRAY =
+define(function(require,exports){
+    var USE_TYPEDARRAY =
       (typeof Uint8Array !== 'undefined') &&
       (typeof Uint16Array !== 'undefined') &&
       (typeof Uint32Array !== 'undefined');
-      return {
-		magic: "\x08\x00",
-		uncompressInputType : USE_TYPEDARRAY ? "uint8array" : "array",
-		uncompress:inflate,
-		compressInputType : USE_TYPEDARRAY ? "uint8array" : "array",
-		compress:deflate
-      };
-      
+    exports.magic = "\x08\x00";
+    exports.uncompress = require('jszip/flate/inflate');
+    exports.uncompressInputType = USE_TYPEDARRAY ? "uint8array" : "array";
+    exports.compress = require('jszip/flate/deflate');
+    exports.compressInputType = USE_TYPEDARRAY ? "uint8array" : "array";
 });

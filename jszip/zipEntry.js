@@ -1,4 +1,8 @@
-  define(['jszip/stringReader','jszip/object','jszip/utils','jszip/compressedObject'],function(StringReader,jszipProto,utils,CompressedObject){
+define(function(require){
+    var StringReader = require('jszip/stringReader');
+    var utils = require('jszip/utils');
+    var CompressedObject = require('jszip/compressedObject');
+    var jszipProto = require('jszip/object');
   // class ZipEntry {{{
    /**
     * An entry in the zip file.

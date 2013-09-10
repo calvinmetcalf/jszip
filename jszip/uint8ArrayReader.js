@@ -1,4 +1,5 @@
-define(['jszip/dataReader'],function(DataReader){
+define(function(require){
+    var DataReader = require('jszip/dataReader');
 function Uint8ArrayReader(data) {
       if (data) {
          this.data = data;

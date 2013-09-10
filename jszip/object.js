@@ -1,6 +1,11 @@
-define(['jszip/support','jszip/utils','jszip/signature','jszip/defaults','jszip/base64','jszip/compressions','jszip/compressedObject'],
-function(support,utils,signature,defaults,base64,compressions,CompressedObject){
-
+define(function(require){
+var support = require('jszip/support');
+var utils = require('jszip/utils');
+var signature = require('jszip/signature');
+var defaults = require('jszip/defaults');
+var base64 = require('jszip/base64');
+var compressions = require('jszip/compressions');
+var CompressedObject = require('jszip/compressedObject');
    /**
     * Returns the raw data of a ZipObject, decompress the content if necessary.
     * @param {ZipObject} file the file to use.
