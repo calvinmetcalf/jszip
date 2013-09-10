@@ -1,4 +1,13 @@
-
+(function (root, factory) {
+  /* global module: false */
+  if (typeof define === 'function' && define.amd) {
+    define(factory);
+  } else if(typeof module !== 'undefined'){
+    module.exports = factory();
+  }else {
+    root.JSZip = factory();
+  }
+}(this, function () {
 
 
 /**
@@ -414,35 +423,36 @@ var requirejs, require, define;
 
 define("node_modules/almond/almond", function(){});
 
-define('jszip/support',[],function() {
-	var out = {};
-	out.arraybuffer = typeof ArrayBuffer !== "undefined" && typeof Uint8Array !== "undefined";
-	out.uint8array = typeof Uint8Array !== "undefined";
+define('jszip/support',['require','exports','module'],function(require,exports) {
+	exports.base64=true;
+	exports.string=true;
+	exports.arraybuffer =  typeof ArrayBuffer !== "undefined" && typeof Uint8Array !== "undefined";
+   // contains true if JSZip can read/generate nodejs Buffer, false otherwise.
+   exports.nodebuffer = typeof Buffer !== "undefined";
+   // contains true if JSZip can read/generate Uint8Array, false otherwise.
+   exports.uint8array =  typeof Uint8Array !== "undefined";
+
 	if (typeof ArrayBuffer === "undefined") {
-		out.blog = false;
-		return out;
-	}
+		exports.blob = false;
+	}else{
 	var buffer = new ArrayBuffer(0);
 	try {
-		out.blog = new Blob([buffer], {
+		exports.blob = new Blob([buffer], {
 			type: "application/zip"
 		}).size === 0;
-		return out;
 	}
 	catch (e) {
 		try {
 			var b = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
 			var builder = new b();
 			builder.append(buffer);
-			out.blob = builder.getBlob('application/zip').size === 0;
-			return out;
+			exports.blob = builder.getBlob('application/zip').size === 0;
 		}
 		catch (e) {
-			out.blob = false;
-			return out;
+			exports.blob = false;
 		}
 	}
-	return out;
+	}
 });
 define('jszip/flate/inflate',[],function() {
 	var context = {};
@@ -813,24 +823,19 @@ function pa(e){var d=new (C?Uint16Array:Array)(e.length),c=[],f=[],a=0,b,k,m,g;b
       return deflate.compress();
    };
 });
-define('jszip/flate/main',['require','jszip/flate/inflate','jszip/flate/deflate'],function(require){
-var inflate = require('jszip/flate/inflate');
-var deflate = require('jszip/flate/deflate');
-var USE_TYPEDARRAY =
+define('jszip/flate/main',['require','exports','module','jszip/flate/inflate','jszip/flate/deflate'],function(require,exports){
+    var USE_TYPEDARRAY =
       (typeof Uint8Array !== 'undefined') &&
       (typeof Uint16Array !== 'undefined') &&
       (typeof Uint32Array !== 'undefined');
-      return {
-		magic: "\x08\x00",
-		uncompressInputType : USE_TYPEDARRAY ? "uint8array" : "array",
-		uncompress:inflate,
-		compressInputType : USE_TYPEDARRAY ? "uint8array" : "array",
-		compress:deflate
-      };
-      
+    exports.magic = "\x08\x00";
+    exports.uncompress = require('jszip/flate/inflate');
+    exports.uncompressInputType = USE_TYPEDARRAY ? "uint8array" : "array";
+    exports.compress = require('jszip/flate/deflate');
+    exports.compressInputType = USE_TYPEDARRAY ? "uint8array" : "array";
 });
 
-define('jszip/compressions',['jszip/flate/main'],function(deflate){
+define('jszip/compressions',['require','jszip/flate/main'],function(require){
 	return {
    "STORE" : {
       magic : "\x00\x00",
@@ -843,18 +848,19 @@ define('jszip/compressions',['jszip/flate/main'],function(deflate){
        compressInputType : null,
       uncompressInputType : null
    },
-   DEFLATE:deflate
+   DEFLATE:require('jszip/flate/main')
 };
 });
 
-define('jszip/utils',['jszip/support','jszip/compressions'], function(support,compressions) {
-	var utils = {};
+define('jszip/utils',['require','exports','module','jszip/support','jszip/compressions'],function(require,exports) {
+    var support = require('jszip/support');
+	var compressions = require('jszip/compressions');
 	/**
 	 * Convert a string to a "binary string" : a string containing only char codes between 0 and 255.
 	 * @param {string} str the string to transform.
 	 * @return {String} the binary string.
 	 */
-	utils.string2binary = function(str) {
+	exports.string2binary = function(str) {
 		var result = "";
 		for (var i = 0; i < str.length; i++) {
 			result += String.fromCharCode(str.charCodeAt(i) & 0xff);
@@ -867,8 +873,8 @@ define('jszip/utils',['jszip/support','jszip/compressions'], function(support,co
 	 * @return {Uint8Array} the typed array.
 	 * @throws {Error} an Error if the browser doesn't support the requested feature.
 	 */
-	utils.string2Uint8Array =  function (str) {
-         return utils.transformTo("uint8array", str);
+	exports.string2Uint8Array =  function (str) {
+         return exports.transformTo("uint8array", str);
       };
 
 	/**
@@ -877,8 +883,8 @@ define('jszip/utils',['jszip/support','jszip/compressions'], function(support,co
 	 * @return {string} the string.
 	 * @throws {Error} an Error if the browser doesn't support the requested feature.
 	 */
-	utils.uint8Array2String = function (array) {
-         return utils.transformTo("string", array);
+	exports.uint8Array2String = function (array) {
+         return exports.transformTo("string", array);
       };
 	/**
 	 * Create a blob from the given string.
@@ -886,12 +892,12 @@ define('jszip/utils',['jszip/support','jszip/compressions'], function(support,co
 	 * @return {Blob} the string.
 	 * @throws {Error} an Error if the browser doesn't support the requested feature.
 	 */
-	utils.string2Blob = function (str) {
-         var buffer = utils.transformTo("arraybuffer", str);
-         return utils.arrayBuffer2Blob(buffer);
+	exports.string2Blob = function (str) {
+         var buffer = exports.transformTo("arraybuffer", str);
+         return exports.arrayBuffer2Blob(buffer);
       };
-	utils.arrayBuffer2Blog=function(buffer) {
-		utils.checkSupport("blob");
+	exports.arrayBuffer2Blob=function(buffer) {
+		exports.checkSupport("blob");
 
          try {
             // Blob constructor
@@ -953,7 +959,7 @@ define('jszip/utils',['jszip/support','jszip/compressions'], function(support,co
       //
       // This code is inspired by http://jsperf.com/arraybuffer-to-string-apply-performance/2
       var chunk = 65536;
-      var result = [], len = array.length, type = utils.getTypeOf(array), k = 0;
+      var result = [], len = array.length, type = exports.getTypeOf(array), k = 0;
 
       while (k < len && chunk > 1) {
          try {
@@ -1073,7 +1079,7 @@ define('jszip/utils',['jszip/support','jszip/compressions'], function(support,co
     * @param {String|Array|ArrayBuffer|Uint8Array|Buffer} input the input to convert.
     * @throws {Error} an Error if the browser doesn't support the requested output type.
     */
-   utils.transformTo = function (outputType, input) {
+   exports.transformTo = function (outputType, input) {
       if (!input) {
          // undefined, null, etc
          // an empty string won't harm.
@@ -1082,8 +1088,8 @@ define('jszip/utils',['jszip/support','jszip/compressions'], function(support,co
       if (!outputType) {
          return input;
       }
-      utils.checkSupport(outputType);
-      var inputType = utils.getTypeOf(input);
+      exports.checkSupport(outputType);
+      var inputType = exports.getTypeOf(input);
       var result = transform[inputType][outputType](input);
       return result;
    };
@@ -1094,7 +1100,7 @@ define('jszip/utils',['jszip/support','jszip/compressions'], function(support,co
     * @param {Object} input the input to identify.
     * @return {String} the (lowercase) type of the input.
     */
-   utils.getTypeOf = function (input) {
+   exports.getTypeOf = function (input) {
       if (typeof input === "string") {
          return "string";
       }
@@ -1117,35 +1123,21 @@ define('jszip/utils',['jszip/support','jszip/compressions'], function(support,co
     * @param {String} type the type to check.
     * @throws {Error} an Error if the browser doesn't support the requested type.
     */
-   utils.checkSupport = function (type) {
-      var supported = true;
-      switch (type.toLowerCase()) {
-         case "uint8array":
-            supported = support.uint8array;
-         break;
-         case "arraybuffer":
-            supported = support.arraybuffer;
-         break;
-         case "nodebuffer":
-            supported = support.nodebuffer;
-         break;
-         case "blob":
-            supported = support.blob;
-         break;
-      }
+   exports.checkSupport = function (type) {
+      var supported = support[type.toLowerCase()];
       if (!supported) {
          throw new Error(type + " is not supported by this browser");
       }
    };
-	utils.MAX_VALUE_16BITS = 65535;
-   utils.MAX_VALUE_32BITS = -1; // well, "\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF" is parsed as -1
+	exports.MAX_VALUE_16BITS = 65535;
+   exports.MAX_VALUE_32BITS = -1; // well, "\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF" is parsed as -1
 
    /**
     * Prettify a string read as binary.
     * @param {string} str the string to prettify.
     * @return {string} a pretty string.
     */
-   utils.pretty = function (str) {
+   exports.pretty = function (str) {
       var res = '', code, i;
       for (i = 0; i < (str||"").length; i++) {
          code = str.charCodeAt(i);
@@ -1159,7 +1151,7 @@ define('jszip/utils',['jszip/support','jszip/compressions'], function(support,co
     * @param {string} compressionMethod the method magic to find.
     * @return {Object|null} the JSZip compression object, null if none found.
     */
-   utils.findCompression = function (compressionMethod) {
+   exports.findCompression = function (compressionMethod) {
       for (var method in compressions) {
          if( !compressions.hasOwnProperty(method) ) { continue; }
          if (compressions[method].magic === compressionMethod) {
@@ -1168,7 +1160,6 @@ define('jszip/utils',['jszip/support','jszip/compressions'], function(support,co
       }
       return null;
    };
-	return utils;
 });
 
 define('jszip/signature',[],function(){
@@ -1294,9 +1285,14 @@ CompressedObject = function () {
    return CompressedObject;
 });
 
-define('jszip/object',['jszip/support','jszip/utils','jszip/signature','jszip/defaults','jszip/base64','jszip/compressions','jszip/compressedObject'],
-function(support,utils,signature,defaults,base64,compressions,CompressedObject){
-
+define('jszip/object',['require','jszip/support','jszip/utils','jszip/signature','jszip/defaults','jszip/base64','jszip/compressions','jszip/compressedObject'],function(require){
+var support = require('jszip/support');
+var utils = require('jszip/utils');
+var signature = require('jszip/signature');
+var defaults = require('jszip/defaults');
+var base64 = require('jszip/base64');
+var compressions = require('jszip/compressions');
+var CompressedObject = require('jszip/compressedObject');
    /**
     * Returns the raw data of a ZipObject, decompress the content if necessary.
     * @param {ZipObject} file the file to use.
@@ -2159,8 +2155,8 @@ function(support,utils,signature,defaults,base64,compressions,CompressedObject){
    return out;
    });
 
-define('jszip/dataReader',['jszip/utils'],function(utils){
-
+define('jszip/dataReader',['require','jszip/utils'],function(require){
+    var utils = require('jszip/utils');
 function DataReader(data) {
       this.data = null; // type : see implementation
       this.length = 0;
@@ -2269,8 +2265,9 @@ function DataReader(data) {
 
 });
 
-define('jszip/stringReader',['jszip/dataReader','jszip/utils'],function(DataReader,utils){
-	
+define('jszip/stringReader',['require','jszip/dataReader','jszip/utils'],function(require){
+	var DataReader = require('jszip/dataReader');
+	var utils = require('jszip/utils');
 	
 	function StringReader(data, optimizedBinaryString) {
       this.data = data;
@@ -2306,7 +2303,8 @@ define('jszip/stringReader',['jszip/dataReader','jszip/utils'],function(DataRead
 	return StringReader;
 });
 
-define('jszip/uint8ArrayReader',['jszip/dataReader'],function(DataReader){
+define('jszip/uint8ArrayReader',['require','jszip/dataReader'],function(require){
+    var DataReader = require('jszip/dataReader');
 function Uint8ArrayReader(data) {
       if (data) {
          this.data = data;
@@ -2349,8 +2347,8 @@ function Uint8ArrayReader(data) {
    return Uint8ArrayReader;
 });
 
-define('jszip/nodeBufferReader',['jszip/uint8ArrayReader'],function(Uint8ArrayReader){
-
+define('jszip/nodeBufferReader',['require','jszip/uint8ArrayReader'],function(require){
+var Uint8ArrayReader = require('jszip/uint8ArrayReader');
 function NodeBufferReader(data) {
       this.data = data;
       this.length = this.data.length;
@@ -2370,7 +2368,11 @@ function NodeBufferReader(data) {
    return NodeBufferReader;
 });
 
-  define('jszip/zipEntry',['jszip/stringReader','jszip/object','jszip/utils','jszip/compressedObject'],function(StringReader,jszipProto,utils,CompressedObject){
+define('jszip/zipEntry',['require','jszip/stringReader','jszip/utils','jszip/compressedObject','jszip/object'],function(require){
+    var StringReader = require('jszip/stringReader');
+    var utils = require('jszip/utils');
+    var CompressedObject = require('jszip/compressedObject');
+    var jszipProto = require('jszip/object');
   // class ZipEntry {{{
    /**
     * An entry in the zip file.
@@ -2592,7 +2594,14 @@ function NodeBufferReader(data) {
    return ZipEntry;
 });
 
-define('jszip/zipEntries',['jszip/stringReader','jszip/nodeBufferReader','jszip/uint8ArrayReader','jszip/utils','jszip/signature','jszip/zipEntry','jszip/support'],function(StringReader,NodeBufferReader,Uint8ArrayReader,utils,sig,ZipEntry,support){
+define('jszip/zipEntries',['require','jszip/stringReader','jszip/nodeBufferReader','jszip/uint8ArrayReader','jszip/utils','jszip/signature','jszip/zipEntry','jszip/support'],function(require){
+    var StringReader = require('jszip/stringReader');
+    var NodeBufferReader = require('jszip/nodeBufferReader');
+    var Uint8ArrayReader = require('jszip/uint8ArrayReader');
+    var utils = require('jszip/utils');
+    var sig = require('jszip/signature');
+    var ZipEntry = require('jszip/zipEntry');
+    var support = require('jszip/support');
   //  class ZipEntries {{{
    /**
     * All the entries in the zip file.
@@ -2788,12 +2797,14 @@ define('jszip/zipEntries',['jszip/stringReader','jszip/nodeBufferReader','jszip/
    return ZipEntries;
 });
 
-define('jszip/load',['jszip/base64','jszip/zipEntries'],function(JSZipBase64,ZipEntries){
+define('jszip/load',['require','jszip/base64','jszip/zipEntries'],function(require){
+    var base64 = require('jszip/base64');
+    var ZipEntries = require('jszip/zipEntries');
 return function(data, options) {
       var files, zipEntries, i, input;
       options = options || {};
       if(options.base64) {
-         data = JSZipBase64.decode(data);
+         data = base64.decode(data);
       }
 
       zipEntries = new ZipEntries(data, options);
