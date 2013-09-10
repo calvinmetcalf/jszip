@@ -8,11 +8,9 @@
     "example": "examples",
     "test": "test"
   },
-  "dependencies": {
-    "requirejs": "~2.1.8"
-  },
   "devDependencies": {
-    "almond": "~0.2.6"
+    "requirejs": "~2.1.8",
+     "almond": "~0.2.6"
   },
   "scripts": {
     "build": "r.js -o options.json"
