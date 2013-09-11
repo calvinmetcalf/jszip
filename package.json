@@ -1,8 +1,8 @@
 {
-  "name": "amdzip",
-  "version": "0.0.0",
+  "name": "jszip",
+  "version": "0.0.1",
   "description": "JSZip =====",
-  "main": "main.js",
+  "main": "jszip.js",
   "directories": {
     "doc": "docs",
     "example": "examples",
@@ -19,9 +19,9 @@
     "type": "git",
     "url": "git://github.com/calvinmetcalf/jszip.git"
   },
-  "author": "",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/calvinmetcalf/jszip/issues"
-  }
+  },
+  "categories": ["Utilities", "Storage"],
 }
