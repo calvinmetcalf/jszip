@@ -1,7 +1,7 @@
 {
   "name": "jszip",
-  "version": "0.1.0",
-  "description": "JSZip =====",
+  "version": "0.1.1",
+  "description": "An AMD version of the library by STUK for creating, reading and editing .zip files with Javascript, with a lovely and simple API."
   "main": "dist/jszip.js",
   "directories": {
     "doc": "docs",
@@ -19,7 +19,16 @@
     "type": "git",
     "url": "git://github.com/calvinmetcalf/jszip.git"
   },
-  "license": "MIT",
+ "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://opensource.org/licenses/MIT"
+    },
+    {
+      "type": "GPL-3.0",
+      "url": "http://opensource.org/licenses/GPL-3.0"
+    }
+  ],
   "bugs": {
     "url": "https://github.com/calvinmetcalf/jszip/issues"
   },

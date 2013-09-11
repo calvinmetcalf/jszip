@@ -1,8 +1,7 @@
 JSZip
 =====
 
-An AMD version of the library for creating, reading and editing .zip files with Javascript, with a
-lovely and simple API.
+An AMD version of the library by [STUK](https://github.com/Stuk/jszip) for creating, reading and editing .zip files with Javascript, with a lovely and simple API.
 
 build with
 
