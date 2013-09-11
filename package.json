@@ -1,8 +1,8 @@
 {
   "name": "jszip",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "JSZip =====",
-  "main": "jszip.js",
+  "main": "dist/jszip.js",
   "directories": {
     "doc": "docs",
     "example": "examples",
