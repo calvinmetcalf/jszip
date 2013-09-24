@@ -1,6 +1,6 @@
 {
   "name": "jszip",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "An AMD version of the library by STUK for creating, reading and editing .zip files with Javascript, with a lovely and simple API.",
   "main": "dist/jszip.js",
   "directories": {
@@ -8,18 +8,14 @@
     "example": "examples",
     "test": "test"
   },
-  "devDependencies": {
-    "requirejs": "~2.1.8",
-     "almond": "~0.2.6"
-  },
   "scripts": {
-    "build": "r.js -o options.json"
+    "build": grunt"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/calvinmetcalf/jszip.git"
   },
- "licenses": [
+  "licenses": [
     {
       "type": "MIT",
       "url": "http://opensource.org/licenses/MIT"
@@ -32,5 +28,14 @@
   "bugs": {
     "url": "https://github.com/calvinmetcalf/jszip/issues"
   },
-  "categories": ["Utilities", "Storage"]
+  "categories": [
+    "Utilities",
+    "Storage"
+  ],
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-component": "~0.1.7",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-contrib-jshint": "~0.6.4"
+  }
 }
