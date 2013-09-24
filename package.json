@@ -8,9 +8,6 @@
     "example": "examples",
     "test": "test"
   },
-  "scripts": {
-    "build": grunt"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/calvinmetcalf/jszip.git"
