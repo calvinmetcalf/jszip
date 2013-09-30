@@ -6,7 +6,7 @@ An AMD version of the library by [STUK](https://github.com/Stuk/jszip) for creat
 build with
 
 ```bash
-npm run-script build
+grunt
 ```
 
 ```javascript
