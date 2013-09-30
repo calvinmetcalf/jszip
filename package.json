@@ -2,7 +2,7 @@
   "name": "jszip",
   "version": "0.2.0",
   "description": "An AMD version of the library by STUK for creating, reading and editing .zip files with Javascript, with a lovely and simple API.",
-  "main": "dist/jszip.js",
+  "main": "lib/index.js",
   "directories": {
     "doc": "docs",
     "example": "examples",
