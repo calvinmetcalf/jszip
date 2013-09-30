@@ -1,6 +1,6 @@
 {
   "name": "jszip",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An AMD version of the library by STUK for creating, reading and editing .zip files with Javascript, with a lovely and simple API.",
   "main": "lib/index.js",
   "directories": {
@@ -29,6 +29,9 @@
     "Utilities",
     "Storage"
   ],
+  "jam":{
+      "main":"dist/jszip.js"
+  },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-component": "~0.1.7",
